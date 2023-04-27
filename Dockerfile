@@ -1,7 +1,8 @@
-FROM maven:3-eclipse-temurin-11
+FROM maven:3.9.1-eclipse-temurin-11
 
-# RUN set -x && \
-#     apk add --no-cache bash
+RUN set -x \
+    && apk update && apk upgrade \
+    && apk add --no-cache bash ca-certificates
 
 ENV GEN_DIR /opt/swagger-codegen
 WORKDIR ${GEN_DIR}
@@ -21,7 +22,6 @@ COPY ./modules/swagger-codegen ${GEN_DIR}/modules/swagger-codegen
 COPY ./modules/swagger-generator ${GEN_DIR}/modules/swagger-generator
 COPY ./pom.xml ${GEN_DIR}
 
-RUN mvn -v
 # Pre-compile swagger-codegen-cli
 RUN mvn clean package -DskipTests
 RUN mvn -am -pl "modules/swagger-codegen-cli" package -DskipTests
