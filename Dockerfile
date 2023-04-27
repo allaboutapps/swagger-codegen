@@ -1,7 +1,7 @@
-FROM maven:3-jdk-8-alpine
+FROM maven:3-eclipse-temurin-11
 
-RUN set -x && \
-    apk add --no-cache bash
+# RUN set -x && \
+#     apk add --no-cache bash
 
 ENV GEN_DIR /opt/swagger-codegen
 WORKDIR ${GEN_DIR}
@@ -21,8 +21,11 @@ COPY ./modules/swagger-codegen ${GEN_DIR}/modules/swagger-codegen
 COPY ./modules/swagger-generator ${GEN_DIR}/modules/swagger-generator
 COPY ./pom.xml ${GEN_DIR}
 
+RUN mvn -v
 # Pre-compile swagger-codegen-cli
-RUN mvn -am -pl "modules/swagger-codegen-cli" package
+RUN mvn clean package -DskipTests
+RUN mvn clean install -DskipTests
+RUN mvn -am -pl "modules/swagger-codegen-cli" package -DskipTests
 
 # This exists at the end of the file to benefit from cached layers when modifying docker-entrypoint.sh.
 COPY docker-entrypoint.sh /usr/local/bin/
