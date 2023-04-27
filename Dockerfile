@@ -24,7 +24,6 @@ COPY ./pom.xml ${GEN_DIR}
 RUN mvn -v
 # Pre-compile swagger-codegen-cli
 RUN mvn clean package -DskipTests
-RUN mvn clean install -DskipTests
 RUN mvn -am -pl "modules/swagger-codegen-cli" package -DskipTests
 
 # This exists at the end of the file to benefit from cached layers when modifying docker-entrypoint.sh.
