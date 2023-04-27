@@ -1,8 +1,9 @@
 FROM maven:3.9.1-eclipse-temurin-11
 
 RUN set -x \
-    && apk update && apk upgrade \
-    && apk add --no-cache bash ca-certificates
+    && apt-get update && apt-get install -y -q --no-install-recommends \
+    bash ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV GEN_DIR /opt/swagger-codegen
 WORKDIR ${GEN_DIR}
